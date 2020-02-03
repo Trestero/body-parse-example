@@ -9,10 +9,18 @@
     "test": "echo \"Tests complete\""
   },
   "author": "Cody Van De Mark",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.20.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Trestero/body-parse-example.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Trestero/body-parse-example/issues"
+  },
+  "homepage": "https://github.com/Trestero/body-parse-example#readme"
 }

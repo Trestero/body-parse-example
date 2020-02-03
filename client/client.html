@@ -3,28 +3,71 @@
 <head>
   <title>Our simple HTTP server</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
     const parseJSON = (xhr, content) => {
-      const obj = JSON.parse(xhr.response);
-      console.dir(obj);
+      if(xhr.response){
+        const obj = JSON.parse(xhr.response);
+        console.dir(obj);
+
+        if(obj.message) {
+          content.innerHTML += `<p>${obj.message}</p>`;
+        }
+      }
     };
 
     const handleResponse = (xhr, parseResponse) => {
       const content = document.querySelector('#content');
-      
+
+      switch (xhr.status) {
+        case 200:
+          content.innerHTML = '<b>Success</b>';
+          break;
+        case 201:
+          content.innerHTML = '<b>Created</b>';
+          break;
+        case 204:
+          content.innerHTML = '<b>Updated (No Content)</b>';
+          break;
+        case 400:
+          content.innerHTML = '<b>Bad Request</b>';
+          break;
+        default:
+          content.innerHTML = '<b>Status Code Not Implemented By Client</b>';
+          break;
+      }
+
+      parseJSON(xhr, content);
     };
 
     const sendPost = (e, nameForm) => {
+      e.preventDefault();
 
+      const nameAction = nameForm.getAttribute('action');
+      const nameMethod = nameForm.getAttribute('method');
+
+      const nameField = nameForm.querySelector('#nameField');
+      const ageField = nameForm.querySelector('#ageField');
+
+      const xhr = new XMLHttpRequest();
+      xhr.open(nameMethod, nameAction);
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+      xhr.onload = () => handleResponse(xhr);
+      const formData = `name=${nameField.value}&age=${ageField.value}`;
+
+      xhr.send(formData);
+
+      return false;
     };
 
     const init = () => {
       const nameForm = document.querySelector('#nameForm');
-      
+
       const addUser = (e) => sendPost(e, nameForm);
-      
+
       nameForm.addEventListener('submit', addUser);
     };
 

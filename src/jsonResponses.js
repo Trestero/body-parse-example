@@ -24,7 +24,31 @@ const getUsers = (request, response) => {
 };
 
 const addUser = (request, response, body) => {
+  const responseJSON = {
+    message: 'Name and age are both required',
+  };
+  if(!body.name || !body.age){
+    responseJSON.id = 'missingParams';
+    return respondJSON(request, response, 400, responseJSON);
+  }
 
+  let responseCode = 201;
+  if(users[body.name]) {
+    responseCode = 204;
+  } else {
+    users[body.name] = {};
+  }
+  users[body.name].name = body.name;
+  users[body.name].age = body.age;
+
+// new user was created
+  if (responseCode === 201) {
+    responseJSON.message = 'Created Successfully';
+    return respondJSON(request, response, responseCode, responseJSON);
+  }
+
+// existing user data was updated
+  return respondJSONMeta(request, response, responseCode);
 };
 
 module.exports = {
